@@ -166,7 +166,7 @@ jobs:
           title: Update Chart image version
           body: |
             This PR updates the image tag in the Helm Chart values file.
-          branch: update-chart-image-version-$TAG
+          branch: update-chart-image-version
           base: main
           labels: helm-chart
           reviewers: jamorosoa
