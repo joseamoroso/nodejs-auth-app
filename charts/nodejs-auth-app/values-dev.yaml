@@ -48,8 +48,8 @@ ingress:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
-    # - host: chart-example.local
-    - paths:
+    - host: app-auth-dev.jamoroso.com
+      paths:
         - path: /
           pathType: Prefix
   tls: []
