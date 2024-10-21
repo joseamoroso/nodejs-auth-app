@@ -5,6 +5,8 @@ on:
   push:
     tags:
       - '*'
+    branches:
+      - main
   pull_request:
     branches:
       - main
@@ -86,7 +88,7 @@ jobs:
 
   build-and-publish:
     # This job will run only when event is a merge, push tag or disptach workflow
-    if: github.ref_type == 'tag' || github.event_name == 'workflow_dispatch'
+    if: github.ref_type == 'tag' || github.event_name == 'workflow_dispatch' || ( github.event_name == 'push' && github.github.head_ref == main' )
     runs-on: ubuntu-latest
     needs: test
 
@@ -142,3 +144,29 @@ jobs:
           fi
           docker tag ${{ secrets.DOCKER_HUB_USERNAME }}/nodejs-auth-app:$TAG ${{ secrets.DOCKER_HUB_USERNAME }}/nodejs-auth-app:latest
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/nodejs-auth-app:latest
+
+      - name: Update Helm Chart values
+        run: |
+          if [ "${{ github.event_name }}" == "push" ] && [ -n "${{ github.ref }}" ]; then
+            TAG=${{ github.ref }}
+            TAG=${TAG#refs/tags/}
+            sed -i "s/tag: .*/tag: \"$TAG\"/" charts/nodejs-auth-app/values-prod.yaml
+          else
+            TAG=${{ github.sha }}
+            sed -i "s/tag: .*/tag: \"$TAG\"/" charts/nodejs-auth-app/values-dev.yaml
+          fi
+      - name: Create Helm Chart Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: Update Chart image version
+          title: Update Chart image version
+          body: |
+            This PR updates the image tag in the Helm Chart values file.
+          branch: update-chart-image-version
+          base: main
+          labels: helm-chart
+          reviewers: jamorosoa
+          assignees: jamorosoa
+          draft: false
+          signoff: true
