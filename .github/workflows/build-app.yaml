@@ -3,14 +3,15 @@ name: CI/CD Pipeline
 on:
   workflow_dispatch:
   push:
-    branches:
-      - main
+    tags:
+      - '*'
   pull_request:
     branches:
       - main
 
 jobs:
   install-dependencies:
+    if: ${{ !contains(github.event.pull_request.title, 'Update Chart image version') }}
     runs-on: ubuntu-latest
 
     steps:
@@ -83,16 +84,61 @@ jobs:
       - name: Run build
         run: npm run build
 
+  build-and-publish:
+    # This job will run only when event is a merge, push tag or disptach workflow
+    if: github.event.ref_type == 'tag' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Restore Node.js modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Run build
+        run: npm run build
+
       - name: Build the Docker image
-        run: docker build -t ${{secrets.DOCKER_HUB_USERNAME}}/nodejs-auth-app:${{ github.sha }} .
+        run: |
+          if [ "${{ github.event_name }}" == "push" ] && [ -n "${{ github.ref }}" ]; then
+            TAG=${{ github.ref }}
+            TAG=${TAG#refs/tags/}
+          else
+            TAG=${{ github.sha }}
+          fi
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/nodejs-auth-app:$TAG .
 
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
 
       - name: Push the Docker image
-        run: docker push ${{secrets.DOCKER_HUB_USERNAME}}/nodejs-auth-app:${{ github.sha }}
-
+        run: |
+          if [ "${{ github.event_name }}" == "push" ] && [ -n "${{ github.ref }}" ]; then
+            TAG=${{ github.ref }}
+            TAG=${TAG#refs/tags/}
+          else
+            TAG=${{ github.sha }}
+          fi
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/nodejs-auth-app:$TAG
       - name: Tag the Docker image with 'latest'
         run: |
-          docker tag ${{secrets.DOCKER_HUB_USERNAME}}/nodejs-auth-app:${{ github.sha }} ${{secrets.DOCKER_HUB_USERNAME}}/nodejs-auth-app:latest
-          docker push ${{secrets.DOCKER_HUB_USERNAME}}/nodejs-auth-app:latest
+          if [ "${{ github.event_name }}" == "push" ] && [ -n "${{ github.ref }}" ]; then
+            TAG=${{ github.ref }}
+            TAG=${TAG#refs/tags/}
+          else
+            TAG=${{ github.sha }}
+          fi
+          docker tag ${{ secrets.DOCKER_HUB_USERNAME }}/nodejs-auth-app:$TAG ${{ secrets.DOCKER_HUB_USERNAME }}/nodejs-auth-app:latest
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/nodejs-auth-app:latest
