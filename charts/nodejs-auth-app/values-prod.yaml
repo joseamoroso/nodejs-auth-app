@@ -47,6 +47,7 @@ ingress:
   annotations:
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/conditions.node-auth-prod-nodejs-auth-app: [{"field":"http-header","httpHeaderConfig":{"httpHeaderName": "x-parse-rest-api-key", "values":["2f5ae96c-b558-4c7b-a590-a501ae1c3f6c"]}}]
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
