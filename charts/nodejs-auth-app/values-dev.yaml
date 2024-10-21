@@ -53,7 +53,8 @@ ingress:
     alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:321852949023:certificate/c3b4407b-9da8-4db6-830d-8e09abc3d0ec
     # kubernetes.io/tls-acme: "true"
   hosts:
-      - paths:
+      - host: node-auth-dev.joseamoroso.com
+        paths:
         - path: /
           pathType: Prefix
   tls: []
