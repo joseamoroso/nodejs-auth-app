@@ -1,0 +1,26 @@
+{
+  "name": "nodejs-auth-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./dist/app.js",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joseamoroso/nodejs-auth-app.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joseamoroso/nodejs-auth-app/issues"
+  },
+  "homepage": "https://github.com/joseamoroso/nodejs-auth-app#readme",
+  "dependencies": {
+    "@types/express": "^5.0.0",
+    "express": "^4.21.1",
+    "typescript": "^5.6.3"
+  }
+}
