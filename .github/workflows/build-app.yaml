@@ -80,15 +80,15 @@ jobs:
             ${{ runner.os }}-node-
 
       - name: Build the Docker image
-        run: docker build -t secrets.DOCKER_HUB_USERNAME/nodejs-auth-app:${{ github.sha }} .
+        run: docker build -t ${{secrets.DOCKER_HUB_USERNAME}}/nodejs-auth-app:${{ github.sha }} .
 
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
 
       - name: Push the Docker image
-        run: docker push secrets.DOCKER_HUB_USERNAME/nodejs-auth-app:${{ github.sha }}
+        run: docker push ${{secrets.DOCKER_HUB_USERNAME}}/nodejs-auth-app:${{ github.sha }}
 
       - name: Tag the Docker image with 'latest'
         run: |
-          docker tag secrets.DOCKER_HUB_USERNAME/nodejs-auth-app:${{ github.sha }} secrets.DOCKER_HUB_USERNAME/nodejs-auth-app:latest
-          docker push secrets.DOCKER_HUB_USERNAME/nodejs-auth-app:latest
+          docker tag ${{secrets.DOCKER_HUB_USERNAME}}/nodejs-auth-app:${{ github.sha }} ${{secrets.DOCKER_HUB_USERNAME}}/nodejs-auth-app:latest
+          docker push ${{secrets.DOCKER_HUB_USERNAME}}/nodejs-auth-app:latest
