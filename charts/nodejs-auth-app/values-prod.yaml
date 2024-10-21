@@ -37,12 +37,12 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
-  type: ClusterIP
+  type: LoadBalancer
   port: 80
   targetPort: 3000
 
 ingress:
-  enabled: yes
+  enabled: false
   className: "alb"
   annotations: {}
     # kubernetes.io/ingress.class: nginx
