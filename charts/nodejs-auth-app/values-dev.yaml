@@ -46,10 +46,10 @@ ingress:
   className: "alb"
   annotations:
     alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/scheme: internet-facing
     # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: app-auth-dev.jamoroso.com
-      paths:
+      - paths:
         - path: /
           pathType: Prefix
   tls: []
