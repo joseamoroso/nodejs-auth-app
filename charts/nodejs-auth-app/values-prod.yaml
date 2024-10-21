@@ -50,6 +50,7 @@ ingress:
     alb.ingress.kubernetes.io/conditions.node-auth-prod-nodejs-auth-app: >
       [{"field":"http-header","httpHeaderConfig":{"httpHeaderName": "x-parse-rest-api-key", "values":["2f5ae96c-b558-4c7b-a590-a501ae1c3f6c"]}}]
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:321852949023:certificate/c3b4407b-9da8-4db6-830d-8e09abc3d0ec
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
