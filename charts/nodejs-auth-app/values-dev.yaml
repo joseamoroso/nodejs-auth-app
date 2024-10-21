@@ -8,7 +8,7 @@ image:
   repository: jamorosoa/nodejs-auth-app
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag: "8e0cc35869dee6ca6c93d2cc0cf74a9291e43fb4"
 
 imagePullSecrets: []
 nameOverride: ""
