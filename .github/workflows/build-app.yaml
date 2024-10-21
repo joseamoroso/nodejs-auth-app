@@ -94,4 +94,4 @@ jobs:
       - name: Tag the Docker image with 'latest'
         run: |
           docker tag ${{secrets.DOCKER_HUB_USERNAME}}/nodejs-auth-app:${{ github.sha }} ${{secrets.DOCKER_HUB_USERNAME}}/nodejs-auth-app:latest
-          docker push ${{secrets.DOCKER_HUB_USERNAME/nodejs-auth-app:latest
+          docker push ${{secrets.DOCKER_HUB_USERNAME}}/nodejs-auth-app:latest
