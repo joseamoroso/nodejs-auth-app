@@ -94,6 +94,7 @@ jobs:
     permissions:
       contents: write
       id-token: write
+      pull-requests: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -165,7 +166,7 @@ jobs:
           title: Update Chart image version
           body: |
             This PR updates the image tag in the Helm Chart values file.
-          branch: update-chart-image-version
+          branch: update-chart-image-version-$TAG
           base: main
           labels: helm-chart
           reviewers: jamorosoa
