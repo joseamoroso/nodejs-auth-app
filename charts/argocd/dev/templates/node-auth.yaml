@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: node-auth-{{ .Values.env }}
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace:  node-auth-{{ .Values.env }}
+    server: {{ .Values.spec.destination.server }}
+  project: default
+  source:
+    repoURL: {{ .Values.spec.source.repoURL }}
+    targetRevision: {{ .Values.spec.source.targetRevision }}
+    path: charts/nodejs-auth-app
+    helm:
+      valueFiles:
+      - values.yaml
+      - values-{{ .Values.env }}.yaml
+  
+  syncPolicy:
+    automated:
+      prune: true
+    syncOptions:
+    - CreateNamespace=true
