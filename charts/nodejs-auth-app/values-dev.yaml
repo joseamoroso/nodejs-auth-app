@@ -44,8 +44,8 @@ service:
 ingress:
   enabled: true
   className: "alb"
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
+  annotations:
+    alb.ingress.kubernetes.io/target-type: ip
     # kubernetes.io/tls-acme: "true"
   hosts:
     - host: app-auth-dev.jamoroso.com
