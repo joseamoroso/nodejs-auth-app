@@ -49,6 +49,7 @@ ingress:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/conditions.node-auth-dev-nodejs-auth-app: >
       [{"field":"http-header","httpHeaderConfig":{"httpHeaderName": "x-parse-rest-api-key", "values":["2f5ae96c-b558-4c7b-a590-a501ae1c3f6c"]}}]
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
     # kubernetes.io/tls-acme: "true"
   hosts:
       - paths:
